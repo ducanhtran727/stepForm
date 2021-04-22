@@ -3,14 +3,10 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import './index.scss';
-import { ValidationProvider ,extend } from 'vee-validate';
+import { ValidationProvider } from 'vee-validate/dist/vee-validate.full.esm';
 import { ValidationObserver } from 'vee-validate';
-import { required } from 'vee-validate/dist/rules'
 Vue.config.productionTip = false;
-extend('required',{
-  ...required,
-  message:'input required',
-})
+
 Vue.component('ValidationProvider',ValidationProvider)
 Vue.component('ValidationObserver',ValidationObserver)
 new Vue({
