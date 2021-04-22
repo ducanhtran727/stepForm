@@ -56,6 +56,7 @@ export default {
     onSubmit() {
       console.log("222");
       this.nextStep();
+      this.$emit('userInput',this.formGroup)
     },
   },
 };

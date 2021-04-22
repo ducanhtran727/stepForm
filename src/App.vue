@@ -13,9 +13,9 @@
         <div>{{ item.text }}</div>
       </div>
     </div>
-    <Step1 :nextStep="next" v-if="activeId === 1" />
-    <Step2 :prevStep="prev" :nextStep="next" v-if="activeId === 2" />
-    <Step3 v-if="activeId === 3" />
+    <Step1 @userInput="formGroup = $event" :nextStep="next" v-if="activeId === 1" />
+    <Step2 :number="formGroup.number" :company="formGroup.company" :prevStep="prev" :nextStep="next" v-if="activeId === 2" />
+    <Step3 :info="formGroup.info" v-if="activeId === 3" />
     <div
       class="btn-box flex items-center justify-center mx-auto"
       v-if="activeId === 3"
@@ -50,6 +50,13 @@ export default {
         },
       ],
       disabled: true,
+      formGroup:{
+        email:"",
+        fullName:"",
+        number:"",
+        company: "",
+        info: "",
+      }
     };
   },
   components: {
