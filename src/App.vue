@@ -14,7 +14,7 @@
       </div>
     </div>
     <Step1 @userInput="formGroup = $event" :nextStep="next" v-if="activeId === 1" />
-    <Step2 :number="formGroup.number" :company="formGroup.company" :prevStep="prev" :nextStep="next" v-if="activeId === 2" />
+    <Step2 @userInput="formGroup = {...formGroup,...$event}" :number="formGroup.number" :company="formGroup.company" :prevStep="prev" :nextStep="next" v-if="activeId === 2" />
     <Step3 :info="formGroup.info" v-if="activeId === 3" />
     <div
       class="btn-box flex items-center justify-center mx-auto"
@@ -23,6 +23,7 @@
       <button @click="reset" class="btn btn-prev">Reset</button>
     </div>
   </div>
+  
 </template>
 <script>
 import Step1 from "./components/Step1";
