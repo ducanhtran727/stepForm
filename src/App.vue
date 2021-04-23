@@ -13,17 +13,33 @@
         <div>{{ item.text }}</div>
       </div>
     </div>
-    <Step1 @userInput="formGroup = $event" :nextStep="next" v-if="activeId === 1" />
-    <Step2 @userInput="formGroup = {...formGroup,...$event}" :number="formGroup.number" :company="formGroup.company" :prevStep="prev" :nextStep="next" v-if="activeId === 2" />
-    <Step3 :info="formGroup.info" v-if="activeId === 3" />
-    <div
-      class="btn-box flex items-center justify-center mx-auto"
-      v-if="activeId === 3"
-    >
-      <button @click="reset" class="btn btn-prev">Reset</button>
-    </div>
+    <ValidationObserver v-slot="{ handleSubmit }">
+      <form @submit.prevent="handleSubmit(next)">
+        <Step1 v-if="activeId === 1" />
+        <Step2 v-if="activeId === 2" />
+        <Step3 v-if="activeId === 3" />
+        <div
+          class="btn-box flex items-center justify-around mx-auto w-full"
+          v-if="activeId === 3"
+        >
+          <button class="btn btn-prev" @click="prev">Previous</button>
+          <button @click="reset" class="btn btn-prev">Reset</button>
+          <button
+            v-show="$store.state.formGroup.statusCheck"
+            class="btn btn-prev"
+            @click="finishing"
+          >
+            Finishing
+          </button>
+        </div>
+        <div v-else class="btn-box flex items-center justify-between mx-auto">
+          <button class="btn btn-prev" @click="prev" :disabled="disabled">Previous</button>
+          <button class="btn btn-next" @click.="next">Next</button>
+        </div>
+      </form>
+    </ValidationObserver>
+    {{ $store.state.formGroup }}
   </div>
-  
 </template>
 <script>
 import Step1 from "./components/Step1";
@@ -33,6 +49,13 @@ export default {
   data() {
     return {
       activeId: 1,
+      formGroup: {
+        email: "",
+        fullName: "",
+        number: "",
+        company: "",
+        info: "",
+      },
       listStep: [
         {
           id: 1,
@@ -51,13 +74,6 @@ export default {
         },
       ],
       disabled: true,
-      formGroup:{
-        email:"",
-        fullName:"",
-        number:"",
-        company: "",
-        info: "",
-      }
     };
   },
   components: {
@@ -69,19 +85,29 @@ export default {
     next() {
       this.activeId++;
       this.disabled = false;
-      console.log(this.disabled);
+      console.log(this.activeId);
     },
     prev() {
       if (this.activeId === 1) {
         this.disabled = true;
       } else {
         this.disabled = false;
-        this.activeId--;
+        this.activeId = this.activeId - 2;
       }
-      console.log(this.disabled);
+      console.log(this.activeId);
     },
     reset() {
       this.activeId = 1;
+      this.$store.state.formGroup.email = "";
+      this.$store.state.formGroup.fullName = "";
+      this.$store.state.formGroup.number = "";
+      this.$store.state.formGroup.company = "";
+      this.$store.state.formGroup.info = "";
+      this.$store.state.formGroup.statusCheck = null;
+    },
+    finishing() {
+      alert("submit success");
+      this.reset();
     },
   },
 };

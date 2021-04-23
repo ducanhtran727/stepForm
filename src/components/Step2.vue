@@ -1,50 +1,41 @@
 <template>
   <div class="formStep1 bg-white rounded-2xl justify-center flex items-center">
-    <ValidationObserver v-slot="{ handleSubmit }">
-      <form @submit.prevent="handleSubmit(onSubmit)">
-        <ValidationProvider
-          name="employees"
-          rules="required|numeric"
-          v-slot="{ errors }"
-        >
-          <div class="form-group flex">
-            <label for="">Number Employees</label>
-            <input
-              class="rounded-2xl w-3/5"
-              v-model="formGroup.number"
-              type="text"
-            />
-            <span>{{ errors[0] }}</span>
-          </div>
-        </ValidationProvider>
-        <ValidationProvider
-          name="company"
-          rules="required|alpha"
-          v-slot="{ errors }"
-        >
-          <div class="form-group flex">
-            <label for="">Your Company</label>
-            <input
-              class="rounded-2xl w-3/5"
-              v-model="formGroup.company"
-              type="text"
-            />
-            <span>{{ errors[0] }}</span>
-          </div>
-        </ValidationProvider>
-        <div class="btn-box flex items-center justify-between mx-auto">
-          <button class="btn btn-prev" @click="prevStep">Previous</button>
-          <button class="btn btn-next" @submit="onSubmit" type="submit">
-            Next
-          </button>
-        </div>
-      </form>
-    </ValidationObserver>
+    <ValidationProvider
+      name="employees"
+      rules="required|numeric"
+      v-slot="{ errors }"
+    >
+      <div class="form-group flex">
+        <label for="">Number Employees</label>
+        <input
+          class="rounded-2xl w-3/5"
+          v-model="formGroup.number"
+          type="text"
+          @input="setNumber"
+        />
+        <span>{{ errors[0] }}</span>
+      </div>
+    </ValidationProvider>
+    <ValidationProvider
+      name="company"
+      rules="required|alpha"
+      v-slot="{ errors }"
+    >
+      <div class="form-group flex">
+        <label for="">Your Company</label>
+        <input
+          class="rounded-2xl w-3/5"
+          v-model="formGroup.company"
+          type="text"
+          @input="setCompany"
+        />
+        <span>{{ errors[0] }}</span>
+      </div>
+    </ValidationProvider>
   </div>
 </template>
 <script>
 export default {
-  props: ["nextStep", "prevStep"],
   data() {
     return {
       formGroup: {
@@ -54,11 +45,17 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
-      console.log("222");
-      this.nextStep();
-      this.$emit('userInput',this.formGroup)
+    setCompany() {
+      this.$store.state.formGroup.company = this.formGroup.company;
     },
+    setNumber() {
+      this.$store.state.formGroup.number = this.formGroup.number;
+    },
+  },
+  created() {
+    const { company, number } = this.$store.state.formGroup;
+    this.formGroup.number = number;
+    this.formGroup.company = company;
   },
 };
 </script>
@@ -67,6 +64,7 @@ export default {
   height: 250px;
   width: 50vw;
   margin-top: 2vh;
+  flex-direction: column;
 }
 .form-group {
   flex-direction: column;
