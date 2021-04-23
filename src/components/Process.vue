@@ -1,12 +1,12 @@
 <template>
     <div class="process flex items-center rounded-2xl mb-10">
-        <div class="processChild" :style="{ width: activeId * 33 + '%' }"></div>
+        <div class="processChild" :style="{ width: activeId * 100/length + '%' }"></div>
     </div>
 </template>
 
 <script>
 export default {
-    props:['activeId']
+    props:['activeId','length']
 }
 </script>
 <style lang="scss" scoped>

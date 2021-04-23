@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Process :activeId="activeId" />
+    <Process :activeId="activeId" :length="listStep.length" />
     <div class="topBox bg-white items-center flex justify-around rounded-2xl">
       <div
         :class="[
@@ -14,33 +14,37 @@
         <div>{{ item.text }}</div>
       </div>
     </div>
-    <ValidationObserver v-slot="{ handleSubmit,reset }">
-      <form @submit.prevent="handleSubmit(next)" @reset.prevent="reset">
-        <Step1 v-if="activeId === 1" />
-        <Step2 v-if="activeId === 2" />
-        <Step3 v-if="activeId === 3" />
-        <div
-          class="btn-box flex items-center justify-around mx-auto w-full"
-          v-if="activeId === 3"
+    <ValidationObserver v-for="item in listStep" :key="item.id">
+      <div>
+        <Step1 v-if="activeId === item.id" :formItem="item.listField" />
+      </div>
+      <div
+        class="btn-box flex items-center justify-around mx-auto w-full"
+        v-if="activeId === listStep.length"
+      >
+        <button class="btn btn-prev" @click="prev">Previous</button>
+        <button @click="resetActive" class="btn btn-prev" type="reset">
+          Reset
+        </button>
+        <button
+          class="btn btn-prev"
         >
-          <button class="btn btn-prev" @click="prev">Previous</button>
-          <button @click="resetActive" class="btn btn-prev">Reset</button>
-          <button
-            v-show="$store.state.formGroup.statusCheck"
-            class="btn btn-prev"
-            
-          >
-            Finishing
-          </button>
-        </div>
-        <div v-else class="btn-box flex items-center justify-between mx-auto">
-          <button class="btn btn-prev" @click="prev" :disabled="disabled">
-            Previous
-          </button>
-          <button class="btn btn-next" type="submit" @submit.self="next">Next</button>
-        </div>
-      </form>
+          Finishing
+        </button>
+      </div>
+      <div
+        v-if="activeId < listStep.length"
+        class="btn-box flex items-center justify-between mx-auto"
+      >
+        <button class="btn btn-prev" @click="prev" :disabled="disabled">
+          Previous
+        </button>
+        <!-- <button class="btn btn-next" type="submit" @click="handleSubmit(next)">
+          Next
+        </button> -->
+      </div>
     </ValidationObserver>
+
     <ul v-if="finish">
       <li>{{ $store.state.formGroup.email }}</li>
       <li>{{ $store.state.formGroup.fullName }}</li>
@@ -52,8 +56,6 @@
 </template>
 <script>
 import Step1 from "./components/Step1";
-import Step2 from "./components/Step2";
-import Step3 from "./components/Step3";
 import Process from "./components/Process";
 export default {
   data() {
@@ -71,37 +73,76 @@ export default {
           id: 1,
           text: "About You",
           name: "step1",
+          listField: [
+            {
+              name: "email",
+              type: "text",
+              msgVali: "email",
+              id: 1,
+            },
+            {
+              name: "full Name",
+              type: "text",
+              msgVali: "alpha_spaces",
+              id: 2,
+            },
+          ],
         },
         {
           id: 2,
           text: "About Company",
           name: "step2",
+          listField: [
+            {
+              name: "number employees",
+              type: "number",
+              msgVali: "numeric",
+              id: 1,
+            },
+            {
+              name: "company",
+              type: "text",
+              msgVali: "alpha_spaces",
+              id: 2,
+            },
+          ],
         },
         {
           id: 3,
           text: "Finishing Up",
           name: "step3",
+          listField: [
+            {
+              name: "infomation",
+              type: "text",
+              msgVali: "alpha_spaces",
+              id: 1,
+            },
+            {
+              name: "I accepet conditions",
+              type: "checkbox",
+              msgVali: "",
+              id: 2,
+            },
+          ],
         },
       ],
       disabled: true,
       finish: false,
-      isSubmit: false,
     };
   },
   components: {
     Step1,
-    Step2,
-    Step3,
     Process,
   },
   methods: {
     next() {
-      if(this.activeId >= this.listStep.length){
-        this.finish = true
-        alert("submit success")
-        return
+      if (this.activeId >= this.listStep.length) {
+        this.finish = true;
+        alert("submit success");
+        return;
       }
-      this.activeId++ ;
+      this.activeId++;
       this.disabled = false;
       console.log(this.activeId);
     },
@@ -110,22 +151,12 @@ export default {
         this.disabled = true;
       } else {
         this.disabled = false;
-        this.activeId = this.activeId - 2 ;
+        this.activeId = this.activeId - 2;
       }
       console.log(this.activeId);
     },
-    resetActive() {
-      this.activeId = 1;
-      this.$store.state.formGroup.email = "";
-      this.$store.state.formGroup.fullName = "";
-      this.$store.state.formGroup.number = "";
-      this.$store.state.formGroup.company = "";
-      this.$store.state.formGroup.info = "";
-      this.$store.state.formGroup.statusCheck = null;
-      this.finish = false;
-    },
   },
-};  
+};
 </script>
 <style lang="scss">
 body {
