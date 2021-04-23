@@ -111,6 +111,7 @@ export default {
       this.$store.state.formGroup.company = "";
       this.$store.state.formGroup.info = "";
       this.$store.state.formGroup.statusCheck = null;
+      this.finish = false
     },
     finishing() {
       alert("submit success");
