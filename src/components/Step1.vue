@@ -32,6 +32,7 @@
 </template>
 <script>
 export default {
+  props:['isSubmit'],
   data() {
     return {
       formGroup: {

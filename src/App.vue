@@ -14,8 +14,8 @@
         <div>{{ item.text }}</div>
       </div>
     </div>
-    <ValidationObserver v-slot="{ handleSubmit }">
-      <form @submit.prevent="handleSubmit(next)">
+    <ValidationObserver v-slot="{ handleSubmit,reset }">
+      <form @submit.prevent="handleSubmit(next)" @reset.prevent="reset">
         <Step1 v-if="activeId === 1" />
         <Step2 v-if="activeId === 2" />
         <Step3 v-if="activeId === 3" />
@@ -24,27 +24,29 @@
           v-if="activeId === 3"
         >
           <button class="btn btn-prev" @click="prev">Previous</button>
-          <button @click="reset" class="btn btn-prev">Reset</button>
+          <button @click="resetActive" class="btn btn-prev">Reset</button>
           <button
             v-show="$store.state.formGroup.statusCheck"
             class="btn btn-prev"
-            @click="finishing"
+            
           >
             Finishing
           </button>
         </div>
         <div v-else class="btn-box flex items-center justify-between mx-auto">
-          <button class="btn btn-prev" @click="prev" :disabled="disabled">Previous</button>
-          <button class="btn btn-next" @click.="next">Next</button>
+          <button class="btn btn-prev" @click="prev" :disabled="disabled">
+            Previous
+          </button>
+          <button class="btn btn-next" type="submit" @submit.self="next">Next</button>
         </div>
       </form>
     </ValidationObserver>
     <ul v-if="finish">
-      <li>{{$store.state.formGroup.email}}</li>
-      <li>{{$store.state.formGroup.fullName}}</li>
-      <li>{{$store.state.formGroup.number}}</li>
-      <li>{{$store.state.formGroup.info}}</li>
-      <li>{{$store.state.formGroup.company}}</li>
+      <li>{{ $store.state.formGroup.email }}</li>
+      <li>{{ $store.state.formGroup.fullName }}</li>
+      <li>{{ $store.state.formGroup.number }}</li>
+      <li>{{ $store.state.formGroup.info }}</li>
+      <li>{{ $store.state.formGroup.company }}</li>
     </ul>
   </div>
 </template>
@@ -82,18 +84,24 @@ export default {
         },
       ],
       disabled: true,
-      finish:false,
+      finish: false,
+      isSubmit: false,
     };
   },
   components: {
     Step1,
     Step2,
     Step3,
-    Process
+    Process,
   },
   methods: {
     next() {
-      this.activeId++;
+      if(this.activeId >= this.listStep.length){
+        this.finish = true
+        alert("submit success")
+        return
+      }
+      this.activeId++ ;
       this.disabled = false;
       console.log(this.activeId);
     },
@@ -102,11 +110,11 @@ export default {
         this.disabled = true;
       } else {
         this.disabled = false;
-        this.activeId = this.activeId - 2;
+        this.activeId = this.activeId - 2 ;
       }
       console.log(this.activeId);
     },
-    reset() {
+    resetActive() {
       this.activeId = 1;
       this.$store.state.formGroup.email = "";
       this.$store.state.formGroup.fullName = "";
@@ -114,14 +122,10 @@ export default {
       this.$store.state.formGroup.company = "";
       this.$store.state.formGroup.info = "";
       this.$store.state.formGroup.statusCheck = null;
-      this.finish = false
-    },
-    finishing() {
-      alert("submit success");
-      this.finish = true;
+      this.finish = false;
     },
   },
-};
+};  
 </script>
 <style lang="scss">
 body {

@@ -12,17 +12,10 @@
         <span>{{ errors[0] }}</span>
       </div>
     </ValidationProvider>
-    <ValidationProvider
-      name="checkbox"
-      rules="required|alpha"
-      v-slot="{ errors }"
-    >
       <div class="flex justify-center mt-4 items-center">
         <input class="mr-4" type="checkbox" ref="userCheck" @input="setStatus" />
         <label for="">I accepet conditions</label>
       </div>
-      <span style="color:red;">{{ errors[0] }}</span>
-    </ValidationProvider>
   </div>
 </template>
 <script>
