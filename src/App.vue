@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Process :activeId="activeId" />
     <div class="topBox bg-white items-center flex justify-around rounded-2xl">
       <div
         :class="[
@@ -51,6 +52,7 @@
 import Step1 from "./components/Step1";
 import Step2 from "./components/Step2";
 import Step3 from "./components/Step3";
+import Process from "./components/Process";
 export default {
   data() {
     return {
@@ -87,6 +89,7 @@ export default {
     Step1,
     Step2,
     Step3,
+    Process
   },
   methods: {
     next() {
