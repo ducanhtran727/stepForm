@@ -38,7 +38,13 @@
         </div>
       </form>
     </ValidationObserver>
-    {{ $store.state.formGroup }}
+    <ul v-if="finish">
+      <li>{{$store.state.formGroup.email}}</li>
+      <li>{{$store.state.formGroup.fullName}}</li>
+      <li>{{$store.state.formGroup.number}}</li>
+      <li>{{$store.state.formGroup.info}}</li>
+      <li>{{$store.state.formGroup.company}}</li>
+    </ul>
   </div>
 </template>
 <script>
@@ -74,6 +80,7 @@ export default {
         },
       ],
       disabled: true,
+      finish:false,
     };
   },
   components: {
@@ -107,7 +114,7 @@ export default {
     },
     finishing() {
       alert("submit success");
-      this.reset();
+      this.finish = true;
     },
   },
 };
