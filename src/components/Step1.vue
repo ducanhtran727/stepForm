@@ -1,24 +1,22 @@
 <template>
   <div class="formStep1 bg-white rounded-2xl flex justify-center items-center">
-    <from>
       <ValidationProvider
         v-for="item in formItem"
         :key="item.id"
         :name="item.name"
-        rules="`required|${formItem.msgVali}`"
+        :rules="item.msgVali"
         v-slot="{ errors }"
       >
         <div class="form-group flex">
           <label for="">{{ item.name }}</label>
           <input
             class="rounded-2xl w-3/5"
-            v-model="value"
-            :type="formItem.type"
+            v-model="item.value"
+            :type="item.type"
           />
           <span>{{ errors[0] }}</span>
         </div>
       </ValidationProvider>
-    </from>
   </div>
 </template>
 <script>
@@ -26,7 +24,6 @@ export default {
   props: ["formItem"],
   data() {
     return {
-      value: "",
     };
   },
 };

@@ -14,20 +14,20 @@
         <div>{{ item.text }}</div>
       </div>
     </div>
-    <ValidationObserver v-for="item in listStep" :key="item.id">
-      <div>
-        <Step1 v-if="activeId === item.id" :formItem="item.listField" />
-      </div>
-      <div
+    <ValidationObserver v-for="item in listStep" :key="item.id" v-slot="{ handleSubmit }">
+        <form @submit.prevent="handleSubmit" v-if="activeId === item.id"> 
+          <Step1  :formItem="item.listField" />
+          <div
         class="btn-box flex items-center justify-around mx-auto w-full"
         v-if="activeId === listStep.length"
       >
         <button class="btn btn-prev" @click="prev">Previous</button>
-        <button @click="resetActive" class="btn btn-prev" type="reset">
+        <button @click="resetActive" class="btn btn-prev" type="button">
           Reset
         </button>
         <button
           class="btn btn-prev"
+          type="submit"
         >
           Finishing
         </button>
@@ -36,14 +36,16 @@
         v-if="activeId < listStep.length"
         class="btn-box flex items-center justify-between mx-auto"
       >
-        <button class="btn btn-prev" @click="prev" :disabled="disabled">
+        <button class="btn btn-prev" type="button" @click="prev" :disabled="disabled">
           Previous
         </button>
-        <!-- <button class="btn btn-next" type="submit" @click="handleSubmit(next)">
+        <button class="btn btn-next" type="submit">
           Next
-        </button> -->
+        </button>
       </div>
+        </form>
     </ValidationObserver>
+     
 
     <ul v-if="finish">
       <li>{{ $store.state.formGroup.email }}</li>
@@ -77,13 +79,15 @@ export default {
             {
               name: "email",
               type: "text",
-              msgVali: "email",
+              msgVali: "required|email",
+              value:"",
               id: 1,
             },
             {
               name: "full Name",
               type: "text",
-              msgVali: "alpha_spaces",
+              msgVali: "required|alpha_spaces",
+              value:"",
               id: 2,
             },
           ],
@@ -97,12 +101,14 @@ export default {
               name: "number employees",
               type: "number",
               msgVali: "numeric",
+              value:"",
               id: 1,
             },
             {
               name: "company",
               type: "text",
-              msgVali: "alpha_spaces",
+              msgVali: "required|alpha_spaces",
+              value:"",
               id: 2,
             },
           ],
@@ -115,13 +121,15 @@ export default {
             {
               name: "infomation",
               type: "text",
-              msgVali: "alpha_spaces",
+              msgVali: "required|alpha_spaces",
+              value:"",
               id: 1,
             },
             {
               name: "I accepet conditions",
               type: "checkbox",
-              msgVali: "",
+              value:"",
+              msgVali: "required",
               id: 2,
             },
           ],
