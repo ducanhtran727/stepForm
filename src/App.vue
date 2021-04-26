@@ -14,38 +14,44 @@
         <div>{{ item.text }}</div>
       </div>
     </div>
-    <ValidationObserver v-for="item in listStep" :key="item.id" v-slot="{ handleSubmit }">
-        <form @submit.prevent="handleSubmit" v-if="activeId === item.id"> 
-          <Step1  :formItem="item.listField" />
-          <div
-        class="btn-box flex items-center justify-around mx-auto w-full"
-        v-if="activeId === listStep.length"
+    <ValidationObserver
+      v-for="item in listStep"
+      :key="item.id"
+      v-slot="{ handleSubmit }"
+    >
+      <form
+        @submit.prevent="
+          handleSubmit(activeId === listStep.length ? finishing : next)
+        "
+        v-if="activeId === item.id"
       >
-        <button class="btn btn-prev" @click="prev">Previous</button>
-        <button @click="resetActive" class="btn btn-prev" type="button">
-          Reset
-        </button>
-        <button
-          class="btn btn-prev"
-          type="submit"
+        <Step1 :formItem="item.listField" />
+        <div
+          class="btn-box flex items-center justify-around mx-auto w-full"
+          v-if="activeId === listStep.length"
         >
-          Finishing
-        </button>
-      </div>
-      <div
-        v-if="activeId < listStep.length"
-        class="btn-box flex items-center justify-between mx-auto"
-      >
-        <button class="btn btn-prev" type="button" @click="prev" :disabled="disabled">
-          Previous
-        </button>
-        <button class="btn btn-next" type="submit">
-          Next
-        </button>
-      </div>
-        </form>
+          <button class="btn btn-prev" @click="prev">Previous</button>
+          <button @click="resetActive" class="btn btn-prev" type="button">
+            Reset
+          </button>
+          <button class="btn btn-prev" type="submit">Finishing</button>
+        </div>
+        <div
+          v-if="activeId < listStep.length"
+          class="btn-box flex items-center justify-between mx-auto"
+        >
+          <button
+            class="btn btn-prev"
+            type="button"
+            @click="prev"
+            :disabled="disabled"
+          >
+            Previous
+          </button>
+          <button class="btn btn-next" type="submit">Next</button>
+        </div>
+      </form>
     </ValidationObserver>
-     
 
     <ul v-if="finish">
       <li>{{ $store.state.formGroup.email }}</li>
@@ -80,14 +86,14 @@ export default {
               name: "email",
               type: "text",
               msgVali: "required|email",
-              value:"",
+              value: "",
               id: 1,
             },
             {
               name: "full Name",
               type: "text",
               msgVali: "required|alpha_spaces",
-              value:"",
+              value: "",
               id: 2,
             },
           ],
@@ -99,16 +105,16 @@ export default {
           listField: [
             {
               name: "number employees",
-              type: "number",
+              type: "text",
               msgVali: "numeric",
-              value:"",
+              value: "",
               id: 1,
             },
             {
               name: "company",
               type: "text",
               msgVali: "required|alpha_spaces",
-              value:"",
+              value: "",
               id: 2,
             },
           ],
@@ -122,13 +128,13 @@ export default {
               name: "infomation",
               type: "text",
               msgVali: "required|alpha_spaces",
-              value:"",
+              value: "",
               id: 1,
             },
             {
               name: "I accepet conditions",
               type: "checkbox",
-              value:"",
+              value: "",
               msgVali: "required",
               id: 2,
             },
@@ -159,9 +165,18 @@ export default {
         this.disabled = true;
       } else {
         this.disabled = false;
-        this.activeId = this.activeId - 2;
+        this.activeId = this.activeId - 1;
       }
       console.log(this.activeId);
+    },
+    finishing() {
+      alert("submit success");
+    },
+    resetActive() {
+      this.activeId = 1;
+      this.listStep.forEach((item) =>
+        item.listField.forEach((item) => (item.value = ""))
+      );
     },
   },
 };
